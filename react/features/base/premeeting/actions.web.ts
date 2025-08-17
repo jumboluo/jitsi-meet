@@ -17,8 +17,6 @@ import { IPreCallResult, IPreCallTestState, PreCallTestStatus } from './types';
 * }}
  */
 export function setIsPremeetingModerator(isModerator: boolean) {
-    console.log('setIsPremeetingModerator: ', isModerator);
-
     return {
         type: IS_PREMEETING_MODERATOR,
         isModerator

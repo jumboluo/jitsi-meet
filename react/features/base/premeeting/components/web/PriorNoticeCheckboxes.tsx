@@ -41,11 +41,13 @@ function PriorNoticeCheckboxes({
         connection: any | null;
         id: string | null;
         isModerator: boolean;
+        lastNotify: number;
     } = {
         conference: null,
         connection: null,
         id: null,
-        isModerator: true
+        isModerator: true,
+        lastNotify: 0
     };
 
     const { isPremeetingModerator, willBeRecorded, willBeTranscribed }
@@ -55,22 +57,25 @@ function PriorNoticeCheckboxes({
         (isModerator: boolean) => {
             dispatch(setIsPremeetingModerator(isModerator));
 
-            dispatch(showNotification({
-                titleKey: isModerator ? 'notify.moderator' : 'notify.notModerator'
-            },
-            NOTIFICATION_TIMEOUT_TYPE.SHORT));
+            const tt = new Date().getTime();
+
+            if (tt - my.lastNotify > 2000) {
+                my.lastNotify = tt;
+                dispatch(showNotification({
+                    titleKey: isModerator ? 'notify.moderator' : 'notify.notModerator'
+                },
+                NOTIFICATION_TIMEOUT_TYPE.SHORT));
+            }
         }, [ dispatch ]);
 
     const setRecorded = useCallback(
         (recorded: boolean, sendMsg: boolean) => {
-            console.log(my.conference);
             dispatch(setWillBeRecorded(recorded));
             sendMsg && my.conference?.sendMessage('setRecorded:' + (recorded ? 'true' : 'false'));
         }, [ dispatch ]);
 
     const setTranscribed = useCallback(
         (transcribed: boolean, sendMsg: boolean) => {
-            console.log(my.conference);
             dispatch(setWillBeTranscribed(transcribed));
             sendMsg && my.conference?.sendMessage('setTranscribed:' + transcribed);
         }, [ dispatch ]);
@@ -82,8 +87,6 @@ function PriorNoticeCheckboxes({
     const toggleTranscribed = useCallback(
         () => setTranscribed(!willBeTranscribed, true)
         , [ willBeTranscribed, setTranscribed ]);
-
-    console.log(isPremeetingModerator, willBeRecorded, willBeTranscribed);
 
     const backendConnection = useCallback(
         (room?: string) => {
@@ -147,8 +150,12 @@ function PriorNoticeCheckboxes({
                         console.log('User role changed:', id, role);
 
                         if (id === my.id) {
-                            my.isModerator = role === 'moderator';
-                            setIsModerator(my.isModerator);
+                            const isModerat = role === 'moderator';
+
+                            if (my.isModerator !== isModerat) {
+                                my.isModerator = isModerat;
+                                setIsModerator(my.isModerator);
+                            }
                         }
                     }
                 );
