@@ -1,10 +1,29 @@
 import { IStore } from '../../app/types';
 import JitsiMeetJS from '../lib-jitsi-meet';
 
-import { SET_PRECALL_TEST_RESULTS, SET_UNSAFE_ROOM_CONSENT } from './actionTypes';
+import { IS_PREMEETING_MODERATOR, SET_PRECALL_TEST_RESULTS, SET_UNSAFE_ROOM_CONSENT, SET_WILL_BE_RECORDED, SET_WILL_BE_TRANSCRIBED } from './actionTypes';
 import { getPreCallICEUrl } from './functions';
 import logger from './logger';
 import { IPreCallResult, IPreCallTestState, PreCallTestStatus } from './types';
+
+/**
+ * Sets whether the meeting will be recorded (audio & video),
+ * prior notice only, not that the meeting will be recorded automatically.
+ *
+ * @param {boolean} isModerator - whether the meeting will be recorded
+ * @returns {{
+ *      type: SET_UNSAFE_ROOM_CONSENT,
+*       isModerator: boolean
+* }}
+ */
+export function setIsPremeetingModerator(isModerator: boolean) {
+    console.log('setIsPremeetingModerator: ', isModerator);
+
+    return {
+        type: IS_PREMEETING_MODERATOR,
+        isModerator
+    };
+}
 
 /**
  * Sets the consent of the user for joining the unsafe room.
@@ -19,6 +38,40 @@ export function setUnsafeRoomConsent(consent: boolean) {
     return {
         type: SET_UNSAFE_ROOM_CONSENT,
         consent
+    };
+}
+
+/**
+ * Sets whether the meeting will be recorded (audio & video),
+ * prior notice only, not that the meeting will be recorded automatically.
+ *
+ * @param {boolean} record - whether the meeting will be recorded
+ * @returns {{
+ *      type: SET_WILL_BE_RECORDED,
+*       record: boolean
+* }}
+ */
+export function setWillBeRecorded(record: boolean) {
+    return {
+        type: SET_WILL_BE_RECORDED,
+        record
+    };
+}
+
+/**
+ * Sets whether the meeting will be transcribed into written minutes,
+ * prior notice only, not that the meeting will be transcribed automatically.
+ *
+ * @param {boolean} transcrib - whether the meeting will be transcribed
+ * @returns {{
+ *      type: SET_WILL_BE_TRANSCRIBED,
+*       transcrib: boolean
+* }}
+ */
+export function setWillBeTranscribed(transcrib: boolean) {
+    return {
+        type: SET_WILL_BE_TRANSCRIBED,
+        transcrib
     };
 }
 

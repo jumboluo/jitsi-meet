@@ -404,6 +404,7 @@ const Prejoin = ({
     return (
         <PreMeetingScreen
             showDeviceStatus = { deviceStatusVisible }
+            showPriorNoticeSwitches = { true }
             showRecordingWarning = { showRecordingWarning }
             showUnsafeRoomWarning = { showUnsafeRoomWarning }
             title = { t('prejoin.joinMeeting') }

@@ -15,6 +15,7 @@ import { isPreCallTestEnabled } from '../../functions';
 
 import ConnectionStatus from './ConnectionStatus';
 import Preview from './Preview';
+import PriorNoticeCheckboxes from './PriorNoticeCheckboxes';
 import RecordingWarning from './RecordingWarning';
 import UnsafeRoomWarning from './UnsafeRoomWarning';
 
@@ -64,6 +65,11 @@ interface IProps {
      * Indicates whether the device status should be shown.
      */
     showDeviceStatus: boolean;
+
+    /**
+     * If should show two prior notice switches.
+     */
+    showPriorNoticeSwitches?: boolean;
 
     /**
      * Indicates whether to display the recording warning.
@@ -188,6 +194,7 @@ const PreMeetingScreen = ({
     showDeviceStatus,
     showRecordingWarning,
     showUnsafeRoomWarning,
+    showPriorNoticeSwitches,
     skipPrejoinButton,
     title,
     videoMuted,
@@ -246,6 +253,7 @@ const PreMeetingScreen = ({
                         {_buttons.length && <Toolbox toolbarButtons = { _buttons } />}
                         {skipPrejoinButton}
                         {showUnsafeRoomWarning && <UnsafeRoomWarning />}
+                        {showPriorNoticeSwitches && <PriorNoticeCheckboxes roomName = { _roomName } />}
                         {showDeviceStatus && <DeviceStatus />}
                         {showRecordingWarning && <RecordingWarning />}
                     </div>
