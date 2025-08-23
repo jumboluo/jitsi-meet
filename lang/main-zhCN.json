@@ -939,7 +939,9 @@
             "questionPlaceholder": "请输入你的问题",
             "removeOption": "删除选项",
             "save": "保存",
-            "send": "发布"
+            "send": "发布",
+            "typeSingleChoice": "单选",
+            "typeMultipleChoice": "多选"
         },
         "errors": {
             "notUniqueOption": "选项必须是唯一的"

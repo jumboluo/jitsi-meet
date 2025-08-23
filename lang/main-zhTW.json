@@ -938,7 +938,9 @@
             "questionPlaceholder": "詢問問題",
             "removeOption": "移除選項",
             "save": "儲存",
-            "send": "傳送"
+            "send": "傳送",
+            "typeSingleChoice": "單選",
+            "typeMultipleChoice": "多選"
         },
         "errors": {
             "notUniqueOption": "選項必須是唯一的"

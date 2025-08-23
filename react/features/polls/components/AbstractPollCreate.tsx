@@ -28,11 +28,13 @@ export type AbstractProps = InputProps & {
     answers: Array<IAnswerData>;
     editingPoll: IPoll | undefined;
     editingPollId: string | undefined;
+    isSingleChoice: boolean;
     isSubmitDisabled: boolean;
     onSubmit: (event?: FormEvent<HTMLFormElement>) => void;
     question: string;
     removeAnswer: (index: number) => void;
     setAnswer: (index: number, value: IAnswerData) => void;
+    setIsSingleChoice: (isSingleChoice: boolean) => void;
     setQuestion: (question: string) => void;
     t: Function;
 };
@@ -84,7 +86,13 @@ const AbstractPollCreate = (Component: ComponentType<AbstractProps>) => (props: 
         return editingPoll ? editingPoll[1].question : '';
     }, [ editingPoll ]);
 
+    const isSingleChoiceResult = useMemo(() => {
+        return editingPoll ? editingPoll[1].isSingleChoice : false;
+    }, [ editingPoll ]);
+
     const [ question, setQuestion ] = useState(questionResult);
+
+    const [ isSingleChoice, setIsSingleChoice ] = useState(isSingleChoiceResult);
 
     const [ answers, setAnswers ] = useState(answerResults);
 
@@ -148,7 +156,8 @@ const AbstractPollCreate = (Component: ComponentType<AbstractProps>) => (props: 
             question,
             answers: filteredAnswers,
             saved: true,
-            editing: false
+            editing: false,
+            isSingleChoice
         };
 
         if (editingPoll) {
@@ -161,7 +170,7 @@ const AbstractPollCreate = (Component: ComponentType<AbstractProps>) => (props: 
 
         setCreateMode(false);
 
-    }, [ conference, question, answers ]);
+    }, [ conference, isSingleChoice, question, answers ]);
 
     // Check if the poll create form can be submitted i.e. if the send button should be disabled.
     const isSubmitDisabled
@@ -176,12 +185,14 @@ const AbstractPollCreate = (Component: ComponentType<AbstractProps>) => (props: 
         answers = { answers }
         editingPoll = { editingPoll?.[1] }
         editingPollId = { editingPoll?.[0] }
+        isSingleChoice = { isSingleChoice }
         isSubmitDisabled = { isSubmitDisabled }
         onSubmit = { onSubmit }
         question = { question }
         removeAnswer = { removeAnswer }
         setAnswer = { setAnswer }
         setCreateMode = { setCreateMode }
+        setIsSingleChoice = { setIsSingleChoice }
         setQuestion = { setQuestion }
         t = { t } />);
 

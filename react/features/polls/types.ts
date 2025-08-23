@@ -40,6 +40,11 @@ export interface IPoll {
     editing: boolean;
 
     /**
+     * Whether poll is singleChoice or not. ('not' means multiple choice)
+     */
+    isSingleChoice: boolean;
+
+    /**
      * The last sent votes for this poll, or null if voting was skipped
      * Note: This is reset when voting/skipping, not when clicking "Change vote".
      */

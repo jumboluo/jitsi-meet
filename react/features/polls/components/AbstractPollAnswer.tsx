@@ -53,7 +53,7 @@ const AbstractPollAnswer = (Component: ComponentType<AbstractProps>) => (props: 
 
     const poll: IPoll = useSelector(getPoll(pollId));
 
-    const { answers, lastVote, question, senderId } = poll;
+    const { answers, lastVote, question, senderId, isSingleChoice } = poll;
 
     const [ checkBoxStates, setCheckBoxState ] = useState(() => {
         if (lastVote !== null) {
@@ -69,6 +69,13 @@ const AbstractPollAnswer = (Component: ComponentType<AbstractProps>) => (props: 
         const newCheckBoxStates = [ ...checkBoxStates ];
 
         newCheckBoxStates[index] = state;
+        if (isSingleChoice && state) {
+            for (let i = 0; i < newCheckBoxStates.length; i++) {
+                if (i !== index) {
+                    newCheckBoxStates[i] = false;
+                }
+            }
+        }
         setCheckBoxState(newCheckBoxStates);
         sendAnalytics(createPollEvent('vote.checked'));
     }, [ checkBoxStates ]);
@@ -93,11 +100,12 @@ const AbstractPollAnswer = (Component: ComponentType<AbstractProps>) => (props: 
             type: COMMAND_NEW_POLL,
             pollId,
             question,
+            isSingleChoice,
             answers: answers.map(answer => answer.name)
         });
 
         dispatch(removePoll(pollId, poll));
-    }, [ conference, question, answers ]);
+    }, [ conference, question, answers, isSingleChoice ]);
 
     const skipAnswer = useCallback(() => {
         dispatch(registerVote(pollId, null));

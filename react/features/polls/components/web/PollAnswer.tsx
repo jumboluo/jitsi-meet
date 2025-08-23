@@ -92,7 +92,8 @@ const PollAnswer = ({
                     { poll.question }
                 </div>
                 <div className = { classes.creator }>
-                    { t('polls.by', { name: creatorName }) }
+                    { t('polls.by', { name: creatorName }) },&nbsp;&nbsp;
+                    { poll.isSingleChoice ? t('polls.create.typeSingleChoice') : t('polls.create.typeMultipleChoice') }
                 </div>
             </div>
             <ul className = { classes.answerList }>

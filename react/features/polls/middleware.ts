@@ -41,9 +41,10 @@ const parsePollData = (pollData: Partial<IPollData>): IPoll | null => {
     if (typeof pollData !== 'object' || pollData === null) {
         return null;
     }
-    const { id, senderId, question, answers } = pollData;
+    const { id, senderId, question, answers, isSingleChoice } = pollData;
 
     if (typeof id !== 'string' || typeof senderId !== 'string'
+            || typeof isSingleChoice !== 'boolean'
             || typeof question !== 'string' || !(answers instanceof Array)) {
         logger.error('Malformed poll data received:', pollData);
 
@@ -65,7 +66,8 @@ const parsePollData = (pollData: Partial<IPollData>): IPoll | null => {
         lastVote: null,
         answers,
         saved: false,
-        editing: false
+        editing: false,
+        isSingleChoice
     };
 };
 
@@ -136,11 +138,12 @@ function _handleReceivePollsMessage(data: any, dispatch: IStore['dispatch'], get
     switch (data.type) {
 
     case COMMAND_NEW_POLL: {
-        const { pollId, answers, senderId, question } = data;
+        const { pollId, answers, senderId, question, isSingleChoice } = data;
         const tmp = {
             id: pollId,
             answers,
             question,
+            isSingleChoice,
             senderId
         };
 
@@ -157,6 +160,7 @@ function _handleReceivePollsMessage(data: any, dispatch: IStore['dispatch'], get
             showResults: false,
             lastVote: null,
             question,
+            isSingleChoice,
             answers: answers.map((answer: string) => {
                 return {
                     name: answer,

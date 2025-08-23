@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
 
 import Button from '../../../base/ui/components/web/Button';
+import Checkbox from '../../../base/ui/components/web/Checkbox';
 import Input from '../../../base/ui/components/web/Input';
 import { BUTTON_TYPES } from '../../../base/ui/constants.web';
 import { editPoll } from '../../actions';
@@ -25,8 +26,16 @@ const useStyles = makeStyles()(theme => {
             color: theme.palette.text01,
             margin: '24px 0 16px'
         },
+        pollTypeCheckbox: {
+            marginRight: '30px',
+            marginBottom: '16px',
+            marginTop: '16px',
+            '&:last-child': {
+                marginTop: 0
+            }
+        },
         questionContainer: {
-            paddingBottom: '24px',
+            marginBottom: '24px',
             borderBottom: `1px solid ${theme.palette.ui03}`
         },
         answerList: {
@@ -68,11 +77,13 @@ const PollCreate = ({
     editingPoll,
     editingPollId,
     isSubmitDisabled,
+    isSingleChoice,
     onSubmit,
     question,
     removeAnswer,
     setAnswer,
     setCreateMode,
+    setIsSingleChoice,
     setQuestion,
     t
 }: AbstractProps) => {
@@ -184,6 +195,14 @@ const PollCreate = ({
         }
     }, [ answers, addAnswer, removeAnswer, requestFocus ]);
 
+    const onSingleChoice = useCallback(e => {
+        setIsSingleChoice(e.target.checked);
+    }, []);
+
+    const onMultipleChoice = useCallback(e => {
+        setIsSingleChoice(!e.target.checked);
+    }, []);
+
     /* eslint-disable react/jsx-no-bind */
     return (<form
         className = { classes.container }
@@ -203,6 +222,19 @@ const PollCreate = ({
                     placeholder = { t('polls.create.questionPlaceholder') }
                     textarea = { true }
                     value = { question } />
+                <div>
+                    <Checkbox
+                        checked = { isSingleChoice }
+                        className = { classes.pollTypeCheckbox }
+                        label = { t('polls.create.typeSingleChoice') }
+                        onChange = { onSingleChoice } />
+                    <Checkbox
+                        checked = { !isSingleChoice }
+                        className = { classes.pollTypeCheckbox }
+                        label = { t('polls.create.typeMultipleChoice') }
+                        onChange = { onMultipleChoice } />
+                </div>
+
             </div>
             <ol className = { classes.answerList }>
                 {answers.map((answer, i: number) => {

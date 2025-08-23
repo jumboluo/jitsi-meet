@@ -4,7 +4,7 @@
 import Logger from '@jitsi/logger';
 import $ from 'jquery';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import { browser } from '../../../react/features/base/lib-jitsi-meet';
 import { FILMSTRIP_BREAKPOINT } from '../../../react/features/filmstrip/constants';
@@ -229,6 +229,8 @@ export class VideoContainer extends LargeContainer {
         this._hideBackground = true;
 
         this._isHidden = false;
+
+        this._background = createRoot(document.getElementById('largeVideoBackgroundContainer'));
 
         /**
          * Flag indicates whether or not the avatar is currently displayed.
@@ -659,7 +661,7 @@ export class VideoContainer extends LargeContainer {
             return;
         }
 
-        ReactDOM.render(
+        this._background.render(
             <LargeVideoBackground
                 hidden = { this._hideBackground || this._isHidden }
                 mirror = {
@@ -669,8 +671,7 @@ export class VideoContainer extends LargeContainer {
                 }
                 orientationFit = { this._backgroundOrientation }
                 videoElement = { this.video }
-                videoTrack = { this.stream } />,
-            document.getElementById('largeVideoBackgroundContainer')
+                videoTrack = { this.stream } />
         );
     }
 }

@@ -970,7 +970,9 @@
             "questionPlaceholder": "Ask a question",
             "removeOption": "Remove option",
             "save": "Save",
-            "send": "Send"
+            "send": "Send",
+            "typeSingleChoice": "Single choice",
+            "typeMultipleChoice": "Multiple choice"
         },
         "errors": {
             "notUniqueOption": "Options must be unique"
