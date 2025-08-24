@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 
 import { IReduxState } from '../../../../app/types';
 import { translate } from '../../../../base/i18n/functions';
+import { getLocalParticipant } from '../../../../base/participants/functions';
 import Dialog from '../../../../base/ui/components/web/Dialog';
+import { openChat, setFocusedTab } from '../../../../chat/actions.web';
+import { ChatTabs } from '../../../../chat/constants';
+import { savePoll } from '../../../../polls/actions';
 import { toggleScreenshotCaptureSummary } from '../../../../screenshot-capture/actions';
 import { isScreenshotCaptureEnabled } from '../../../../screenshot-capture/functions';
 import { RECORDING_TYPES } from '../../../constants';
@@ -19,9 +23,9 @@ import StartRecordingDialogContent from './StartRecordingDialogContent';
  * progress.
  *
  * @augments Component
+ * @returns {React.Component} The StartRecordingDialog component.
  */
 class StartRecordingDialog extends AbstractStartRecordingDialog {
-
     /**
      * Disables start recording button.
      *
@@ -55,6 +59,55 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
     }
 
     /**
+     * Starts a file recording session.
+     *
+     * @private
+     * @returns {boolean} - True (to note that the modal should be closed).
+     */
+    override _onSubmit() {
+        if (!this.props._recordingPollApproved) {
+            this.startRecordingPoll();
+
+            return true;
+        }
+
+        return super._onSubmit();
+    }
+
+    startRecordingPoll = () => {
+        const pollId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(36);
+        const localParticipant = getLocalParticipant(APP.store.getState());
+
+        const poll = {
+            changingVote: false,
+            senderId: localParticipant?.id,
+            showResults: false,
+            lastVote: null,
+            question: this.props.t('recording.startRecordingPollDefaultQuestion'),
+            answers: [
+                {
+                    name: this.props.t('polls.approved'),
+                    voters: []
+                },
+                {
+                    name: this.props.t('polls.disapprove'),
+                    voters: []
+                }
+            ],
+            participants: APP.conference?.listMembersIdsIncludeLocal() || [],
+            saved: true,
+            editing: false,
+            isSingleChoice: true,
+            isApprovalPoll: true,
+            skippable: false
+        };
+
+        this.props.dispatch(savePoll(pollId, poll));
+        this.props.dispatch(openChat());
+        this.props.dispatch(setFocusedTab(ChatTabs.POLLS));
+    };
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
@@ -73,13 +126,14 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
         } = this.state;
         const {
             _fileRecordingsServiceEnabled,
-            _fileRecordingsServiceSharingEnabled
+            _fileRecordingsServiceSharingEnabled,
+            _recordingPollApproved
         } = this.props;
 
         return (
             <Dialog
                 ok = {{
-                    translationKey: 'dialog.startRecording',
+                    translationKey: _recordingPollApproved ? 'dialog.startRecording' : 'dialog.startRecordingPoll',
                     disabled: this.isStartRecordingDisabled()
                 }}
                 onSubmit = { this._onSubmit }
@@ -128,9 +182,11 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
  * @returns {Object}
  */
 function mapStateToProps(state: IReduxState, ownProps: any) {
+
     return {
         ...abstractMapStateToProps(state, ownProps),
-        _screenshotCaptureEnabled: isScreenshotCaptureEnabled(state, true, false)
+        _screenshotCaptureEnabled: isScreenshotCaptureEnabled(state, true, false),
+        _recordingPollApproved: Boolean(state['features/recording'].poll?.approved)
     };
 }
 

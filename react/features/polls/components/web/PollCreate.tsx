@@ -30,6 +30,7 @@ const useStyles = makeStyles()(theme => {
             marginRight: '30px',
             marginBottom: '16px',
             marginTop: '16px',
+            cursor: 'pointer',
             '&:last-child': {
                 marginTop: 0
             }
@@ -77,6 +78,7 @@ const PollCreate = ({
     editingPoll,
     editingPollId,
     isSubmitDisabled,
+    isApprovalPoll,
     isSingleChoice,
     onSubmit,
     question,
@@ -85,6 +87,8 @@ const PollCreate = ({
     setCreateMode,
     setIsSingleChoice,
     setQuestion,
+    skippable,
+    setSkippable,
     t
 }: AbstractProps) => {
     const { classes } = useStyles();
@@ -196,11 +200,17 @@ const PollCreate = ({
     }, [ answers, addAnswer, removeAnswer, requestFocus ]);
 
     const onSingleChoice = useCallback(e => {
+        if (!e.target.checked) return;
         setIsSingleChoice(e.target.checked);
     }, []);
 
     const onMultipleChoice = useCallback(e => {
+        if (!e.target.checked) return;
         setIsSingleChoice(!e.target.checked);
+    }, []);
+
+    const onSkippable = useCallback(e => {
+        setSkippable(e.target.checked);
     }, []);
 
     /* eslint-disable react/jsx-no-bind */
@@ -222,18 +232,27 @@ const PollCreate = ({
                     placeholder = { t('polls.create.questionPlaceholder') }
                     textarea = { true }
                     value = { question } />
-                <div>
-                    <Checkbox
-                        checked = { isSingleChoice }
-                        className = { classes.pollTypeCheckbox }
-                        label = { t('polls.create.typeSingleChoice') }
-                        onChange = { onSingleChoice } />
-                    <Checkbox
-                        checked = { !isSingleChoice }
-                        className = { classes.pollTypeCheckbox }
-                        label = { t('polls.create.typeMultipleChoice') }
-                        onChange = { onMultipleChoice } />
-                </div>
+                { !isApprovalPoll && (<div>
+                    <div>
+                        <Checkbox
+                            checked = { isSingleChoice }
+                            className = { classes.pollTypeCheckbox }
+                            label = { t('polls.create.typeSingleChoice') }
+                            onChange = { onSingleChoice } />
+                        <Checkbox
+                            checked = { !isSingleChoice }
+                            className = { classes.pollTypeCheckbox }
+                            label = { t('polls.create.typeMultipleChoice') }
+                            onChange = { onMultipleChoice } />
+                    </div>
+                    <div>
+                        <Checkbox
+                            checked = { skippable }
+                            className = { classes.pollTypeCheckbox }
+                            label = { t('polls.create.skippable') }
+                            onChange = { onSkippable } />
+                    </div>
+                </div>) }
 
             </div>
             <ol className = { classes.answerList }>
@@ -260,11 +279,12 @@ const PollCreate = ({
                             }) }
                             onKeyPress = { ev => onAnswerKeyDown(i, ev) }
                             placeholder = { t('polls.create.answerPlaceholder', { index: i + 1 }) }
+                            readOnly = { isApprovalPoll }
                             ref = { r => registerFieldRef(i, r) }
                             textarea = { true }
                             value = { answer.name } />
 
-                        { answers.length > 2
+                        { answers.length > 2 && !isApprovalPoll
                         && <button
                             className = { classes.removeOption }
                             onClick = { () => removeAnswer(i) }
@@ -275,7 +295,7 @@ const PollCreate = ({
                 }
                 )}
             </ol>
-            <div className = { classes.addButtonContainer }>
+            {!isApprovalPoll && (<div className = { classes.addButtonContainer }>
                 <Button
                     accessibilityLabel = { t('polls.create.addOption') }
                     disabled = { answers.length >= ANSWERS_LIMIT }
@@ -285,7 +305,7 @@ const PollCreate = ({
                         requestFocus(answers.length);
                     } }
                     type = { BUTTON_TYPES.SECONDARY } />
-            </div>
+            </div>)}
         </div>
         <div className = { classes.footer }>
             <Button

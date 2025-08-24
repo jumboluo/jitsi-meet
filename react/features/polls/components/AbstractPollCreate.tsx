@@ -28,6 +28,7 @@ export type AbstractProps = InputProps & {
     answers: Array<IAnswerData>;
     editingPoll: IPoll | undefined;
     editingPollId: string | undefined;
+    isApprovalPoll: boolean;
     isSingleChoice: boolean;
     isSubmitDisabled: boolean;
     onSubmit: (event?: FormEvent<HTMLFormElement>) => void;
@@ -36,6 +37,8 @@ export type AbstractProps = InputProps & {
     setAnswer: (index: number, value: IAnswerData) => void;
     setIsSingleChoice: (isSingleChoice: boolean) => void;
     setQuestion: (question: string) => void;
+    setSkippable: (skippable: boolean) => void;
+    skippable: boolean;
     t: Function;
 };
 
@@ -90,10 +93,17 @@ const AbstractPollCreate = (Component: ComponentType<AbstractProps>) => (props: 
         return editingPoll ? editingPoll[1].isSingleChoice : false;
     }, [ editingPoll ]);
 
+    const skippableResult = useMemo(() => {
+        return editingPoll ? editingPoll[1].skippable : true;
+    }, [ editingPoll ]);
+
+    const isApprovalPoll = useMemo(() => {
+        return editingPoll ? editingPoll[1].isApprovalPoll : false;
+    }, [ editingPoll ]);
+
     const [ question, setQuestion ] = useState(questionResult);
-
     const [ isSingleChoice, setIsSingleChoice ] = useState(isSingleChoiceResult);
-
+    const [ skippable, setSkippable ] = useState(skippableResult);
     const [ answers, setAnswers ] = useState(answerResults);
 
     const setAnswer = useCallback((i: number, answer: IAnswerData) => {
@@ -157,7 +167,10 @@ const AbstractPollCreate = (Component: ComponentType<AbstractProps>) => (props: 
             answers: filteredAnswers,
             saved: true,
             editing: false,
-            isSingleChoice
+            isSingleChoice,
+            skippable,
+            isApprovalPoll: isApprovalPoll,
+            participants: APP.conference?.listMembersIdsIncludeLocal() || []
         };
 
         if (editingPoll) {
@@ -170,7 +183,7 @@ const AbstractPollCreate = (Component: ComponentType<AbstractProps>) => (props: 
 
         setCreateMode(false);
 
-    }, [ conference, isSingleChoice, question, answers ]);
+    }, [ conference, isSingleChoice, question, answers, skippable ]);
 
     // Check if the poll create form can be submitted i.e. if the send button should be disabled.
     const isSubmitDisabled
@@ -185,6 +198,7 @@ const AbstractPollCreate = (Component: ComponentType<AbstractProps>) => (props: 
         answers = { answers }
         editingPoll = { editingPoll?.[1] }
         editingPollId = { editingPoll?.[0] }
+        isApprovalPoll = { isApprovalPoll }
         isSingleChoice = { isSingleChoice }
         isSubmitDisabled = { isSubmitDisabled }
         onSubmit = { onSubmit }
@@ -194,6 +208,8 @@ const AbstractPollCreate = (Component: ComponentType<AbstractProps>) => (props: 
         setCreateMode = { setCreateMode }
         setIsSingleChoice = { setIsSingleChoice }
         setQuestion = { setQuestion }
+        setSkippable = { setSkippable }
+        skippable = { skippable }
         t = { t } />);
 
 };

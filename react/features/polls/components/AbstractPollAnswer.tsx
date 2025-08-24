@@ -34,6 +34,7 @@ export type AbstractProps = {
     setCreateMode: (mode: boolean) => void;
     skipAnswer: () => void;
     skipChangeVote: () => void;
+    skipable: boolean;
     submitAnswer: () => void;
     t: Function;
 };
@@ -53,7 +54,7 @@ const AbstractPollAnswer = (Component: ComponentType<AbstractProps>) => (props: 
 
     const poll: IPoll = useSelector(getPoll(pollId));
 
-    const { answers, lastVote, question, senderId, isSingleChoice } = poll;
+    const { answers, lastVote, question, senderId, isSingleChoice, skippable, isApprovalPoll, participants } = poll;
 
     const [ checkBoxStates, setCheckBoxState ] = useState(() => {
         if (lastVote !== null) {
@@ -66,14 +67,14 @@ const AbstractPollAnswer = (Component: ComponentType<AbstractProps>) => (props: 
     const participantName = useBoundSelector(getParticipantDisplayName, senderId);
 
     const setCheckbox = useCallback((index, state) => {
+        if (isSingleChoice && !state) return;
+
         const newCheckBoxStates = [ ...checkBoxStates ];
 
         newCheckBoxStates[index] = state;
         if (isSingleChoice && state) {
             for (let i = 0; i < newCheckBoxStates.length; i++) {
-                if (i !== index) {
-                    newCheckBoxStates[i] = false;
-                }
+                newCheckBoxStates[i] = i === index;
             }
         }
         setCheckBoxState(newCheckBoxStates);
@@ -100,19 +101,24 @@ const AbstractPollAnswer = (Component: ComponentType<AbstractProps>) => (props: 
             type: COMMAND_NEW_POLL,
             pollId,
             question,
+            isApprovalPoll,
             isSingleChoice,
+            skippable,
+            participants,
             answers: answers.map(answer => answer.name)
         });
 
         dispatch(removePoll(pollId, poll));
-    }, [ conference, question, answers, isSingleChoice ]);
+    }, [ conference, question, answers, isSingleChoice, skippable, isApprovalPoll ]);
 
     const skipAnswer = useCallback(() => {
+        console.log('skipAnswer');
         dispatch(registerVote(pollId, null));
         sendAnalytics(createPollEvent('vote.skipped'));
     }, [ pollId ]);
 
     const skipChangeVote = useCallback(() => {
+        console.log('skipChangeVote');
         dispatch(setVoteChanging(pollId, false));
     }, [ dispatch, pollId ]);
 
@@ -128,6 +134,7 @@ const AbstractPollAnswer = (Component: ComponentType<AbstractProps>) => (props: 
         setCreateMode = { setCreateMode }
         skipAnswer = { skipAnswer }
         skipChangeVote = { skipChangeVote }
+        skipable = { skippable }
         submitAnswer = { submitAnswer }
         t = { t } />);
 

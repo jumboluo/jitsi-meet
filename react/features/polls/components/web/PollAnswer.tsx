@@ -129,12 +129,13 @@ const PollAnswer = ({
                             labelKey = { 'polls.answer.send' }
                             onClick = { sendPoll } />
                     </> : <>
-                        <Button
+                        { poll.skippable && (<Button
                             accessibilityLabel = { t('polls.answer.skip') }
                             className = { classes.buttonMargin }
                             labelKey = { 'polls.answer.skip' }
                             onClick = { changingVote ? skipChangeVote : skipAnswer }
-                            type = { BUTTON_TYPES.SECONDARY } />
+                            type = { BUTTON_TYPES.SECONDARY } />)
+                        }
                         <Button
                             accessibilityLabel = { t('polls.answer.submit') }
                             disabled = { isSubmitAnswerDisabled(checkBoxStates) }

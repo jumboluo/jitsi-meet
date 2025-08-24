@@ -1,3 +1,4 @@
+import { UPDATE_CONFERENCE_METADATA } from '../base/conference/actionTypes';
 import ReducerRegistry from '../base/redux/ReducerRegistry';
 
 import {
@@ -15,6 +16,9 @@ const DEFAULT_STATE = {
     consentRequested: new Set(),
     disableHighlightMeetingMoment: false,
     pendingNotificationUids: {},
+    poll: {
+        approved: false
+    },
     selectedRecordingService: '',
     sessionDatas: []
 };
@@ -35,6 +39,13 @@ export interface IRecordingState {
     disableHighlightMeetingMoment: boolean;
     pendingNotificationUids: {
         [key: string]: string | undefined;
+    };
+    poll: {
+        approved: boolean;
+        approvedAt?: number;
+        pollId?: string;
+        startedAt?: number;
+        startedBy?: string;
     };
     selectedRecordingService: string;
     sessionDatas: Array<ISessionData>;
@@ -113,6 +124,16 @@ ReducerRegistry.register<IRecordingState>(STORE_NAME,
                 ...state,
                 wasStartRecordingSuggested: true
             };
+        case UPDATE_CONFERENCE_METADATA: {
+            const { metadata } = action;
+
+            return {
+                ...state,
+                poll: {
+                    ...metadata?.recordingPoll || { approved: false },
+                }
+            };
+        }
 
         default:
             return state;

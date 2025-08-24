@@ -769,6 +769,14 @@ export default {
     },
 
     /**
+     * Retrieve list of ids of conference participants (without local user).
+     * @returns {string[]}
+     */
+    listMembersIdsIncludeLocal() {
+        return this.listMembersIds().concat(this.getMyUserId());
+    },
+
+    /**
      * Checks whether the participant identified by id is a moderator.
      * @id id to search for participant
      * @return {boolean} whether the participant is moderator

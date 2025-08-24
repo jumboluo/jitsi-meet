@@ -169,6 +169,7 @@ export default class LargeVideoManager {
         this.removePresenceLabel();
 
         this._dominantSpeakerAvatarContainer.unmount();
+        this._dominantSpeakerAvatarContainer = null;
 
         this.container.style.display = 'none';
     }
@@ -520,7 +521,7 @@ export default class LargeVideoManager {
      * Updates the src of the dominant speaker avatar
      */
     updateAvatar() {
-        this._dominantSpeakerAvatarContainer.render(
+        this._dominantSpeakerAvatarContainer?.render(
             <Provider store = { APP.store }>
                 <Avatar
                     id = "dominantSpeakerAvatar"
@@ -578,6 +579,7 @@ export default class LargeVideoManager {
      */
     removePresenceLabel() {
         this.remotePresenceMessage?.unmount();
+        this.remotePresenceMessage = null;
     }
 
     /**

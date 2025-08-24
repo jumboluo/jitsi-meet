@@ -69,6 +69,11 @@ export interface IProps extends WithTranslation {
     _recordAudioAndVideo: boolean;
 
     /**
+     * <tt>true</tt> if the recording poll has been approved.
+     */
+    _recordingPollApproved: boolean;
+
+    /**
      * Whether or not the local participant is screensharing.
      */
     _screensharing: boolean;
@@ -102,7 +107,6 @@ export interface IProps extends WithTranslation {
 }
 
 interface IState {
-
     /**
      * <tt>true</tt> if we have valid oauth token.
      */

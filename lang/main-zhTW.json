@@ -474,6 +474,7 @@
         "start": "開始",
         "startLiveStreaming": "開始直播串流",
         "startRecording": "啟動錄製作業",
+        "startRecordingPoll": "開啓錄制投票",
         "startRemoteControlErrorMessage": "嘗試啟動遠端控制階段時發生錯誤！",
         "stopLiveStreaming": "停止直播串流",
         "stopRecording": "停用錄製",
@@ -926,6 +927,7 @@
             "skip": "跳過",
             "submit": "送出"
         },
+        "approved": "同意",
         "by": "由 {{ name }}",
         "closeButton": "結束投票",
         "create": {
@@ -939,9 +941,11 @@
             "removeOption": "移除選項",
             "save": "儲存",
             "send": "傳送",
+            "skippable": "允許跳過",
             "typeSingleChoice": "單選",
             "typeMultipleChoice": "多選"
         },
+        "disapprove": "不同意",
         "errors": {
             "notUniqueOption": "選項必須是唯一的"
         },
@@ -1098,6 +1102,7 @@
         "onlyRecordSelf": "僅錄製我的音訊和影片串流",
         "pending": "正在準備錄製會議…",
         "policyError": "您啟動錄製的速度過快，請稍後再試！",
+        "pollAproved": "錄像請求已獲全員投票通過",
         "recordAudioAndVideo": "錄製音訊和視訊",
         "recordTranscription": "錄製字幕內容",
         "saveLocalRecording": "將錄製檔案保存在本機（測試版）",
@@ -1109,6 +1114,7 @@
         "showAdvancedOptions": "進階選項",
         "signIn": "登入",
         "signOut": "登出",
+        "startRecordingPollDefaultQuestion": "我想錄制此次會議，您同意嗎？",
         "surfaceError": "請選擇目前分頁",
         "title": "錄製中",
         "unavailable": "喔哦！{{serviceName}} 目前無法使用，我們正在解決此問題，請稍後再試。",

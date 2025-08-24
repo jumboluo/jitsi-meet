@@ -67,6 +67,7 @@ const AbstractPollResults = (Component: ComponentType<AbstractProps>) => (props:
 
     const answers: Array<AnswerInfo> = useMemo(() => {
         const allVoters = new Set();
+        const answersCopy = [ ...poll.answers ];
 
         // Getting every voters ID that participates to the poll
         for (const answer of poll.answers) {
@@ -76,9 +77,19 @@ const AbstractPollResults = (Component: ComponentType<AbstractProps>) => (props:
             voters.forEach((voter: string) => allVoters.add(voter));
         }
 
-        return poll.answers.map(answer => {
+        const nonVotedParticipants = poll.participants?.filter(p => !allVoters.has(p)) || [];
+        const participantsCount = poll.participants?.length || 0;
+
+        if (nonVotedParticipants.length > 0) {
+            answersCopy.push({
+                name: 'Non Voted',
+                voters: nonVotedParticipants,
+            });
+        }
+
+        return answersCopy.map(answer => {
             const nrOfVotersPerAnswer = answer.voters ? Object.keys(answer.voters).length : 0;
-            const percentage = allVoters.size > 0 ? Math.round(nrOfVotersPerAnswer / allVoters.size * 100) : 0;
+            const percentage = participantsCount > 0 ? Math.round(nrOfVotersPerAnswer / participantsCount * 100) : 0;
 
             let voters;
 

@@ -493,6 +493,7 @@
         "start": "Start ",
         "startLiveStreaming": "Start live stream",
         "startRecording": "Start recording",
+        "startRecordingPoll": "Start a poll",
         "startRemoteControlErrorMessage": "An error occurred while trying to start the remote control session!",
         "stopLiveStreaming": "Stop live stream",
         "stopRecording": "Stop recording",
@@ -958,6 +959,7 @@
             "skip": "Skip",
             "submit": "Submit"
         },
+        "approved": "Approved",
         "by": "By {{ name }}",
         "closeButton": "Close poll",
         "create": {
@@ -971,12 +973,14 @@
             "removeOption": "Remove option",
             "save": "Save",
             "send": "Send",
+            "skippable": "Skippable",
             "typeSingleChoice": "Single choice",
             "typeMultipleChoice": "Multiple choice"
         },
         "errors": {
             "notUniqueOption": "Options must be unique"
         },
+        "disapprove": "Disapprove",
         "notification": {
             "description": "Open polls tab to vote",
             "title": "A new poll was added to this meeting"
@@ -1130,6 +1134,7 @@
         "onlyRecordSelf": "Record only my audio and video streams",
         "pending": "Preparing to record the meeting…",
         "policyError": "You tried to start a recording too quickly. Please try again later!",
+        "pollAproved": "Recording request approved",
         "recordAudioAndVideo": "Record audio and video",
         "recordTranscription": "Record transcription",
         "saveLocalRecording": "Save recording file locally (Beta)",
@@ -1141,6 +1146,7 @@
         "showAdvancedOptions": "Advanced options",
         "signIn": "Sign in",
         "signOut": "Sign out",
+        "startRecordingPollDefaultQuestion": "I would like to record this meeting",
         "surfaceError": "Please select the current tab.",
         "title": "Recording",
         "unavailable": "Oops! The {{serviceName}} is currently unavailable. We're working on resolving the issue. Please try again later.",

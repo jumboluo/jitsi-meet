@@ -41,10 +41,11 @@ const parsePollData = (pollData: Partial<IPollData>): IPoll | null => {
     if (typeof pollData !== 'object' || pollData === null) {
         return null;
     }
-    const { id, senderId, question, answers, isSingleChoice } = pollData;
+    const { id, senderId, question, answers, isSingleChoice, skippable, participants } = pollData;
 
     if (typeof id !== 'string' || typeof senderId !== 'string'
             || typeof isSingleChoice !== 'boolean'
+            || typeof skippable !== 'boolean'
             || typeof question !== 'string' || !(answers instanceof Array)) {
         logger.error('Malformed poll data received:', pollData);
 
@@ -67,7 +68,10 @@ const parsePollData = (pollData: Partial<IPollData>): IPoll | null => {
         answers,
         saved: false,
         editing: false,
-        isSingleChoice
+        isSingleChoice,
+        skippable,
+        isApprovalPoll: false, // Default value for backward compatibility.
+        participants: participants ?? null
     };
 };
 
@@ -138,13 +142,16 @@ function _handleReceivePollsMessage(data: any, dispatch: IStore['dispatch'], get
     switch (data.type) {
 
     case COMMAND_NEW_POLL: {
-        const { pollId, answers, senderId, question, isSingleChoice } = data;
+        const { pollId, answers, senderId, question, isSingleChoice, skippable, isApprovalPoll, participants } = data;
         const tmp = {
             id: pollId,
             answers,
             question,
+            isApprovalPoll,
             isSingleChoice,
-            senderId
+            senderId,
+            skippable,
+            participants
         };
 
         // Check integrity of the poll data.
@@ -161,6 +168,9 @@ function _handleReceivePollsMessage(data: any, dispatch: IStore['dispatch'], get
             lastVote: null,
             question,
             isSingleChoice,
+            skippable,
+            isApprovalPoll,
+            participants,
             answers: answers.map((answer: string) => {
                 return {
                     name: answer,

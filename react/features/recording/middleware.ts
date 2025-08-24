@@ -4,7 +4,7 @@ import { createRecordingEvent } from '../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../analytics/functions';
 import { IStore } from '../app/types';
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../base/app/actionTypes';
-import { CONFERENCE_JOIN_IN_PROGRESS } from '../base/conference/actionTypes';
+import { CONFERENCE_JOIN_IN_PROGRESS, UPDATE_CONFERENCE_METADATA } from '../base/conference/actionTypes';
 import { getCurrentConference } from '../base/conference/functions';
 import { openDialog } from '../base/dialog/actions';
 import JitsiMeetJS, {
@@ -31,6 +31,7 @@ import {
 import { TRACK_ADDED } from '../base/tracks/actionTypes';
 import { hideNotification, showErrorNotification, showNotification } from '../notifications/actions';
 import { NOTIFICATION_TIMEOUT_TYPE } from '../notifications/constants';
+import { RECEIVE_ANSWER } from '../polls/actionTypes';
 import { isRecorderTranscriptionsRunning } from '../transcribing/functions';
 
 import { RECORDING_SESSION_UPDATED, START_LOCAL_RECORDING, STOP_LOCAL_RECORDING } from './actionTypes';
@@ -313,6 +314,34 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
             const audioTrack = track.jitsiTrack.track;
 
             LocalRecordingManager.addAudioTrackToLocalRecording(audioTrack);
+        }
+        break;
+    }
+    case RECEIVE_ANSWER: {
+        const state = getState();
+        const { pollId } = action;
+        const poll = state['features/polls'].polls[pollId];
+        const localParticipant = getLocalParticipant(state);
+
+        if (localParticipant?.role !== PARTICIPANT_ROLE.MODERATOR || !poll?.isApprovalPoll
+            || !poll?.participants?.length || !poll?.answers[0]) {
+            break;
+        }
+
+        if (poll?.answers[0].voters.length === poll?.participants?.length) {
+            // All participants have voted to approve: update the conference metadata
+            APP.conference?._room?.getMetadataHandler().setMetadata('recordingPoll', { approved: true });
+        }
+
+        break;
+    }
+    case UPDATE_CONFERENCE_METADATA: {
+        const { metadata } = action;
+
+        if (metadata?.recordingPoll?.approved) {
+            dispatch(showNotification({
+                titleKey: 'recording.pollAproved'
+            }, NOTIFICATION_TIMEOUT_TYPE.MEDIUM));
         }
         break;
     }

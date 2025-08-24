@@ -474,6 +474,7 @@
         "start": "开始",
         "startLiveStreaming": "开始直播",
         "startRecording": "开始录制",
+        "startRecordingPoll": "开启录制投票",
         "startRemoteControlErrorMessage": "尝试启动远程控制会话时出错！",
         "stopLiveStreaming": "停止直播",
         "stopRecording": "停止录制",
@@ -927,6 +928,7 @@
             "skip": "跳过",
             "submit": "提交"
         },
+        "approved": "同意",
         "by": "由{{ name }}发起",
         "closeButton": "结束投票",
         "create": {
@@ -940,9 +942,11 @@
             "removeOption": "删除选项",
             "save": "保存",
             "send": "发布",
+            "skippable": "允许跳过",
             "typeSingleChoice": "单选",
             "typeMultipleChoice": "多选"
         },
+        "disapprove": "不同意",
         "errors": {
             "notUniqueOption": "选项必须是唯一的"
         },
@@ -1098,7 +1102,8 @@
         "onBy": "{{name}}开启了录制",
         "onlyRecordSelf": "仅录制我的音频和视频",
         "pending": "正在准备录制会议……",
-        "policyError": "",
+        "policyError": "您启动录制的频率太快，请稍后再试！",
+        "pollAproved": "录像请求已获全员投票通过",
         "recordAudioAndVideo": "录音录像",
         "recordTranscription": "会议转录为文本",
         "saveLocalRecording": "本地保存录制文件（测试版）",
@@ -1110,6 +1115,7 @@
         "showAdvancedOptions": "高级选项",
         "signIn": "登录",
         "signOut": "注销",
+        "startRecordingPollDefaultQuestion": "我想录制这次会议，可以吗？",
         "surfaceError": "请选择当前选项卡。",
         "title": "录制中",
         "unavailable": "糟糕！{{serviceName}}目前无法使用，我们正在努力解决这个问题，请稍后再试。",

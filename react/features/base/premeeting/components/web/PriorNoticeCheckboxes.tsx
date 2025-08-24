@@ -7,7 +7,6 @@ import { IReduxState } from '../../../../app/types';
 import { showNotification } from '../../../../notifications/actions';
 import { NOTIFICATION_TIMEOUT_TYPE } from '../../../../notifications/constants';
 import { JitsiConferenceEvents, JitsiConnectionEvents } from '../../../lib-jitsi-meet';
-import { getLocalParticipant } from '../../../participants/functions';
 import Checkbox from '../../../ui/components/web/Checkbox';
 import { getBackendSafeRoomName } from '../../../util/uri';
 import { setIsPremeetingModerator, setWillBeRecorded, setWillBeTranscribed } from '../../actions.web';
@@ -53,14 +52,6 @@ function PriorNoticeCheckboxes({
 
     const { isPremeetingModerator, willBeRecorded, willBeTranscribed }
     = useSelector((state: IReduxState) => state['features/base/premeeting']);
-
-    // const { displayName } = useSelector((state: IReduxState) => state['features/base/settings']);
-
-    // console.log('Got displayName: ', displayName);
-
-    const localParticipant = getLocalParticipant(APP.store.getState());
-
-    console.log('localParticipant: ', localParticipant?.name);
 
     const setIsModerator = useCallback(
         (isModerator: boolean) => {

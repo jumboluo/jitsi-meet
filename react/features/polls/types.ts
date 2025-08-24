@@ -40,6 +40,11 @@ export interface IPoll {
     editing: boolean;
 
     /**
+     * Whether poll is an approval poll or not.
+     */
+    isApprovalPoll: boolean;
+
+    /**
      * Whether poll is singleChoice or not. ('not' means multiple choice)
      */
     isSingleChoice: boolean;
@@ -49,6 +54,11 @@ export interface IPoll {
      * Note: This is reset when voting/skipping, not when clicking "Change vote".
      */
     lastVote: Array<boolean> | null;
+
+    /**
+     * An array of participant IDs that are expected to vote in this poll.
+     */
+    participants: Array<string> | null;
 
     /**
      * The question asked by this poll.
@@ -69,6 +79,11 @@ export interface IPoll {
      * Whether the results should be shown instead of the answer form.
      */
     showResults: boolean;
+
+    /**
+     * Whether the poll can be skipped or not.
+     */
+    skippable: boolean;
 }
 
 export interface IPollData extends IPoll {
