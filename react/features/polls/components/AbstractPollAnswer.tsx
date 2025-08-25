@@ -112,13 +112,11 @@ const AbstractPollAnswer = (Component: ComponentType<AbstractProps>) => (props: 
     }, [ conference, question, answers, isSingleChoice, skippable, isApprovalPoll ]);
 
     const skipAnswer = useCallback(() => {
-        console.log('skipAnswer');
         dispatch(registerVote(pollId, null));
         sendAnalytics(createPollEvent('vote.skipped'));
     }, [ pollId ]);
 
     const skipChangeVote = useCallback(() => {
-        console.log('skipChangeVote');
         dispatch(setVoteChanging(pollId, false));
     }, [ dispatch, pollId ]);
 
