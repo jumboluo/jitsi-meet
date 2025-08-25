@@ -27,7 +27,7 @@ MiddlewareRegistry.register(() => (next: Function) => (action: AnyAction) => {
         if (!isEmbedded() && 'PressureObserver' in window) {
             pressureObserver = new window.PressureObserver(
                     (records: typeof window.PressureRecord) => {
-                        logger.info('Compute pressure state changed:', JSON.stringify(records));
+                        // logger.info('Compute pressure state changed:', JSON.stringify(records));
                         APP.API.notifyComputePressureChanged(records);
                     }
             );

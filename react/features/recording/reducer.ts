@@ -42,10 +42,6 @@ export interface IRecordingState {
     };
     poll: {
         approved: boolean;
-        approvedAt?: number;
-        pollId?: string;
-        startedAt?: number;
-        startedBy?: string;
     };
     selectedRecordingService: string;
     sessionDatas: Array<ISessionData>;
