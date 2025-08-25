@@ -95,3 +95,15 @@ export const RESET_NB_UNREAD_POLLS = 'RESET_NB_UNREAD_POLLS';
  * }
  */
 export const SAVE_POLL = 'SAVE_POLL';
+
+
+/**
+ * The type of the action which signals that a Poll will be unchangeable
+ *
+ * {
+ *     type: VOTE_UNCHANGEABLE,
+ *     pollId: string
+ * }
+ *
+ */
+export const VOTE_UNCHANGEABLE = 'VOTE_UNCHANGEABLE';

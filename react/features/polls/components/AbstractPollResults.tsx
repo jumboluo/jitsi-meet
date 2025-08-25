@@ -43,6 +43,7 @@ export type AbstractProps = {
     showDetails: boolean;
     t: Function;
     toggleIsDetailed: (e?: React.MouseEvent<HTMLButtonElement> | GestureResponderEvent) => void;
+    voteChangeable: boolean;
 };
 
 /**
@@ -131,7 +132,8 @@ const AbstractPollResults = (Component: ComponentType<AbstractProps>) => (props:
             question = { poll.question }
             showDetails = { showDetails }
             t = { t }
-            toggleIsDetailed = { toggleIsDetailed } />
+            toggleIsDetailed = { toggleIsDetailed }
+            voteChangeable = { poll.isVoteChangeable } />
     );
 };
 

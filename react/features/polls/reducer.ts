@@ -9,7 +9,8 @@ import {
     REGISTER_VOTE,
     REMOVE_POLL,
     RESET_NB_UNREAD_POLLS,
-    SAVE_POLL
+    SAVE_POLL,
+    VOTE_UNCHANGEABLE
 } from './actionTypes';
 import { IAnswer, IPoll } from './types';
 
@@ -185,6 +186,19 @@ ReducerRegistry.register<IPollsState>(STORE_NAME, (state = INITIAL_STATE, action
             ...state,
             polls: {
                 ...newState
+            }
+        };
+    }
+
+    case VOTE_UNCHANGEABLE: {
+        return {
+            ...state,
+            polls: {
+                ...state.polls,
+                [action.pollId]: {
+                    ...state.polls[action.pollId],
+                    isVoteChangeable: false
+                }
             }
         };
     }

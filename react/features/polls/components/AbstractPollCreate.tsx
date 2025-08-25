@@ -170,6 +170,7 @@ const AbstractPollCreate = (Component: ComponentType<AbstractProps>) => (props: 
             isSingleChoice,
             skippable,
             isApprovalPoll: isApprovalPoll,
+            isVoteChangeable: true,
             participants: APP.conference?.listMembersIdsIncludeLocal() || []
         };
 

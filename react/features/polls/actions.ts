@@ -7,7 +7,8 @@ import {
     REGISTER_VOTE,
     REMOVE_POLL,
     RESET_NB_UNREAD_POLLS,
-    SAVE_POLL
+    SAVE_POLL,
+    VOTE_UNCHANGEABLE
 } from './actionTypes';
 import { IAnswer, IPoll } from './types';
 
@@ -172,5 +173,21 @@ export const removePoll = (pollId: string, poll: IPoll) => {
         type: REMOVE_POLL,
         pollId,
         poll
+    };
+};
+
+/**
+ * Action to signal that a poll's vote can no longer be changed.
+ *
+ * @param {string} pollId - The id of the poll that gets to be unchangeable.
+ * @returns {{
+ *     type: VOTE_UNCHANGEABLE,
+ *     pollId: string
+ * }}
+ */
+export const voteUnchangeable = (pollId: string) => {
+    return {
+        type: VOTE_UNCHANGEABLE,
+        pollId
     };
 };

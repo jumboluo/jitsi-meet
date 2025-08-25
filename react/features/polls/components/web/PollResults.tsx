@@ -117,7 +117,8 @@ const PollResults = ({
     showDetails,
     question,
     t,
-    toggleIsDetailed
+    toggleIsDetailed,
+    voteChangeable
 }: AbstractProps) => {
     const { classes } = useStyles();
 
@@ -162,10 +163,10 @@ const PollResults = ({
                     onClick = { toggleIsDetailed }>
                     {showDetails ? t('polls.results.hideDetailedResults') : t('polls.results.showDetailedResults')}
                 </button>
-                <button
+                {voteChangeable && <button
                     onClick = { changeVote }>
                     {haveVoted ? t('polls.results.changeVote') : t('polls.results.vote')}
-                </button>
+                </button>}
             </div>
         </div>
     );

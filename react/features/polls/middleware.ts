@@ -71,7 +71,8 @@ const parsePollData = (pollData: Partial<IPollData>): IPoll | null => {
         isSingleChoice,
         skippable,
         isApprovalPoll: false, // Default value for backward compatibility.
-        participants: participants ?? null
+        participants: participants ?? null,
+        isVoteChangeable: pollData.isVoteChangeable ?? true
     };
 };
 
@@ -170,6 +171,7 @@ function _handleReceivePollsMessage(data: any, dispatch: IStore['dispatch'], get
             isSingleChoice,
             skippable,
             isApprovalPoll,
+            isVoteChangeable: true,
             participants,
             answers: answers.map((answer: string) => {
                 return {

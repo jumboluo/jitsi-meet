@@ -32,6 +32,7 @@ import { TRACK_ADDED } from '../base/tracks/actionTypes';
 import { hideNotification, showErrorNotification, showNotification } from '../notifications/actions';
 import { NOTIFICATION_TIMEOUT_TYPE } from '../notifications/constants';
 import { RECEIVE_ANSWER } from '../polls/actionTypes';
+import { voteUnchangeable } from '../polls/actions';
 import { isRecorderTranscriptionsRunning } from '../transcribing/functions';
 
 import { RECORDING_SESSION_UPDATED, START_LOCAL_RECORDING, STOP_LOCAL_RECORDING } from './actionTypes';
@@ -331,6 +332,8 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
         if (poll?.answers[0].voters.length === poll?.participants?.length) {
             // All participants have voted to approve: update the conference metadata
             APP.conference?._room?.getMetadataHandler().setMetadata('recordingPoll', { approved: true });
+
+            dispatch(voteUnchangeable(pollId));
         }
 
         break;
