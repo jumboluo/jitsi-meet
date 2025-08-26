@@ -92,6 +92,10 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
             = getSessionById(getState(), action.sessionData.id);
     }
 
+    // We need to know if the recording was approved before reducers have run
+    // so we can decide whether to show a notification or not
+    const approved = getState()['features/recording'].poll?.approved;
+
     const result = next(action);
 
     switch (action.type) {
@@ -317,7 +321,7 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
         break;
     }
     case UPDATE_CONFERENCE_METADATA: {
-        if (action.metadata?.recordingPoll?.approved) {
+        if (!approved && action.metadata?.recordingPoll?.approved) {
             dispatch(showNotification({
                 titleKey: 'recording.pollAproved'
             }, NOTIFICATION_TIMEOUT_TYPE.MEDIUM));

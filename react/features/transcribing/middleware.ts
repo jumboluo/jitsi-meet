@@ -12,7 +12,7 @@ import './subscriber';
  * @param {Store} store - The redux store.
  * @returns {Function}
  */
-MiddlewareRegistry.register(({ dispatch }) => next => action => {
+MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
     switch (action.type) {
     case TRANSCRIBER_LEFT:
         if (action.abruptly) {
@@ -23,7 +23,9 @@ MiddlewareRegistry.register(({ dispatch }) => next => action => {
         break;
 
     case UPDATE_CONFERENCE_METADATA:
-        if (action.metadata?.transcribingPoll?.approved) {
+        const approved = getState()['features/transcribing'].poll?.approved;
+
+        if (!approved && action.metadata?.transcribingPoll?.approved) {
             dispatch(showNotification({
                 titleKey: 'transcribing.pollAproved'
             }, NOTIFICATION_TIMEOUT_TYPE.MEDIUM));
