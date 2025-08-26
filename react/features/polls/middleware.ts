@@ -1,6 +1,7 @@
 import { IStore } from '../app/types';
 import { ENDPOINT_MESSAGE_RECEIVED, NON_PARTICIPANT_MESSAGE_RECEIVED } from '../base/conference/actionTypes';
 import { getCurrentConference } from '../base/conference/functions';
+import { getLocalParticipant } from '../base/participants/functions';
 import MiddlewareRegistry from '../base/redux/MiddlewareRegistry';
 import StateListenerRegistry from '../base/redux/StateListenerRegistry';
 import { playSound } from '../base/sounds/actions';
@@ -9,8 +10,8 @@ import { arePollsDisabled } from '../conference/functions.any';
 import { showNotification } from '../notifications/actions';
 import { NOTIFICATION_TIMEOUT_TYPE, NOTIFICATION_TYPE } from '../notifications/constants';
 
-import { RECEIVE_POLL } from './actionTypes';
-import { clearPolls, receiveAnswer, receivePoll } from './actions';
+import { RECEIVE_ANSWER, RECEIVE_POLL } from './actionTypes';
+import { clearPolls, receiveAnswer, receivePoll, voteUnchangeable } from './actions';
 import {
     COMMAND_ANSWER_POLL,
     COMMAND_NEW_POLL,
@@ -121,6 +122,24 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
         }
         break;
     }
+    case RECEIVE_ANSWER: {
+        const state = getState();
+        const poll = state['features/polls'].polls[action.pollId];
+        const localParticipant = getLocalParticipant(state);
+
+        if (poll.isApprovalPoll && localParticipant?.role === 'moderator'
+            && poll.answers[0].voters.length === poll.participants?.length
+        ) {
+            if (poll.approvalPollType === 'recording') {
+                APP.conference?._room?.getMetadataHandler().setMetadata('recordingPoll', { approved: true });
+            } else if (poll.approvalPollType === 'transcribing') {
+                APP.conference?._room?.getMetadataHandler().setMetadata('transcribingPoll', { approved: true });
+            }
+            dispatch(voteUnchangeable(action.pollId));
+        }
+
+        break;
+    }
     }
 
     return result;
@@ -143,12 +162,13 @@ function _handleReceivePollsMessage(data: any, dispatch: IStore['dispatch'], get
     switch (data.type) {
 
     case COMMAND_NEW_POLL: {
-        const { pollId, answers, senderId, question, isSingleChoice, skippable, isApprovalPoll, participants } = data;
+        const { pollId, answers, senderId, question, isSingleChoice, skippable, isApprovalPoll, approvalPollType, participants } = data;
         const tmp = {
             id: pollId,
             answers,
             question,
             isApprovalPoll,
+            approvalPollType,
             isSingleChoice,
             senderId,
             skippable,
@@ -171,6 +191,7 @@ function _handleReceivePollsMessage(data: any, dispatch: IStore['dispatch'], get
             isSingleChoice,
             skippable,
             isApprovalPoll,
+            approvalPollType,
             isVoteChangeable: true,
             participants,
             answers: answers.map((answer: string) => {

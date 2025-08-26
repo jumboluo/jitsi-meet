@@ -6,8 +6,12 @@ import { makeStyles } from 'tss-react/mui';
 import { IReduxState } from '../../../app/types';
 import Icon from '../../../base/icons/components/Icon';
 import { IconSubtitles } from '../../../base/icons/svg';
+import { getLocalParticipant } from '../../../base/participants/functions';
 import Button from '../../../base/ui/components/web/Button';
 import { groupMessagesBySender } from '../../../base/util/messageGrouping';
+import { openChat, setFocusedTab } from '../../../chat/actions.web';
+import { ChatTabs } from '../../../chat/constants';
+import { savePoll } from '../../../polls/actions';
 import { setRequestingSubtitles } from '../../../subtitles/actions.any';
 import LanguageSelector from '../../../subtitles/components/web/LanguageSelector';
 import { canStartSubtitles } from '../../../subtitles/functions.any';
@@ -88,6 +92,7 @@ export default function ClosedCaptionsTab() {
     const _canStartSubtitles = useSelector(canStartSubtitles);
     const [ isButtonPressed, setButtonPressed ] = useState(false);
     const subtitlesError = useSelector((state: IReduxState) => state['features/subtitles']._hasError);
+    const _transcribingPollApproved = Boolean(useSelector((state: IReduxState) => state['features/transcribing'].poll?.approved));
 
     const filteredSubtitles = useMemo(() => {
         // First, create a map of transcription messages by message ID
@@ -120,13 +125,53 @@ export default function ClosedCaptionsTab() {
     const groupedSubtitles = useMemo(() =>
         groupMessagesBySender(filteredSubtitles), [ filteredSubtitles ]);
 
+    const startPoll = useCallback(() => {
+        const pollId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(36);
+        const localParticipant = getLocalParticipant(APP.store.getState());
+
+        const poll = {
+            changingVote: false,
+            senderId: localParticipant?.id,
+            showResults: false,
+            lastVote: null,
+            question: t('transcribing.startTranscribingPollDefaultQuestion'),
+            answers: [
+                {
+                    name: t('polls.approved'),
+                    voters: []
+                },
+                {
+                    name: t('polls.disapprove'),
+                    voters: []
+                }
+            ],
+            participants: APP.conference?.listMembersIdsIncludeLocal() || [],
+            saved: true,
+            editing: false,
+            isSingleChoice: true,
+            approvalPollType: 'transcribing',
+            isApprovalPoll: true,
+            isVoteChangeable: true,
+            skippable: false
+        };
+
+        dispatch(savePoll(pollId, poll));
+        dispatch(openChat());
+        dispatch(setFocusedTab(ChatTabs.POLLS));
+    }, [ dispatch ]);
+
     const startClosedCaptions = useCallback(() => {
+        if (!_transcribingPollApproved) {
+            startPoll();
+
+            return;
+        }
         if (isButtonPressed) {
             return;
         }
         dispatch(setRequestingSubtitles(true, false, null));
         setButtonPressed(true);
-    }, [ dispatch, isButtonPressed, setButtonPressed ]);
+    }, [ dispatch, isButtonPressed, setButtonPressed, _transcribingPollApproved ]);
 
     if (subtitlesError && isButtonPressed) {
         setButtonPressed(false);
@@ -140,7 +185,7 @@ export default function ClosedCaptionsTab() {
                         accessibilityLabel = 'Start Closed Captions'
                         appearance = 'primary'
                         disabled = { isButtonPressed }
-                        labelKey = 'closedCaptionsTab.startClosedCaptionsButton'
+                        labelKey = { _transcribingPollApproved ? 'closedCaptionsTab.startClosedCaptionsButton' : 'closedCaptionsTab.startPollButton' }
                         onClick = { startClosedCaptions }
                         size = 'large'
                         type = 'primary' />

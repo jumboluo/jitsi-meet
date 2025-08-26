@@ -54,7 +54,7 @@ const AbstractPollAnswer = (Component: ComponentType<AbstractProps>) => (props: 
 
     const poll: IPoll = useSelector(getPoll(pollId));
 
-    const { answers, lastVote, question, senderId, isSingleChoice, skippable, isApprovalPoll, participants } = poll;
+    const { answers, lastVote, question, senderId, isSingleChoice, skippable, isApprovalPoll, approvalPollType, participants } = poll;
 
     const [ checkBoxStates, setCheckBoxState ] = useState(() => {
         if (lastVote !== null) {
@@ -102,6 +102,7 @@ const AbstractPollAnswer = (Component: ComponentType<AbstractProps>) => (props: 
             pollId,
             question,
             isApprovalPoll,
+            approvalPollType,
             isSingleChoice,
             skippable,
             participants,

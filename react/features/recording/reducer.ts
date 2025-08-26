@@ -120,20 +120,22 @@ ReducerRegistry.register<IRecordingState>(STORE_NAME,
                 ...state,
                 wasStartRecordingSuggested: true
             };
-        case UPDATE_CONFERENCE_METADATA: {
-            const { metadata } = action;
-
-            return {
-                ...state,
-                poll: {
-                    ...metadata?.recordingPoll || { approved: false },
-                }
-            };
-        }
+        case UPDATE_CONFERENCE_METADATA:
+            if (action.metadata?.recordingPoll?.approved) {
+                return {
+                    ...state,
+                    poll: {
+                        approved: true,
+                    }
+                };
+            } else {
+                return state;
+            }
 
         default:
             return state;
         }
+
     });
 
 /**

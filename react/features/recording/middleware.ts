@@ -31,8 +31,6 @@ import {
 import { TRACK_ADDED } from '../base/tracks/actionTypes';
 import { hideNotification, showErrorNotification, showNotification } from '../notifications/actions';
 import { NOTIFICATION_TIMEOUT_TYPE } from '../notifications/constants';
-import { RECEIVE_ANSWER } from '../polls/actionTypes';
-import { voteUnchangeable } from '../polls/actions';
 import { isRecorderTranscriptionsRunning } from '../transcribing/functions';
 
 import { RECORDING_SESSION_UPDATED, START_LOCAL_RECORDING, STOP_LOCAL_RECORDING } from './actionTypes';
@@ -318,30 +316,8 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
         }
         break;
     }
-    case RECEIVE_ANSWER: {
-        const state = getState();
-        const { pollId } = action;
-        const poll = state['features/polls'].polls[pollId];
-        const localParticipant = getLocalParticipant(state);
-
-        if (localParticipant?.role !== PARTICIPANT_ROLE.MODERATOR || !poll?.isApprovalPoll
-            || !poll?.participants?.length || !poll?.answers[0]) {
-            break;
-        }
-
-        if (poll?.answers[0].voters.length === poll?.participants?.length) {
-            // All participants have voted to approve: update the conference metadata
-            APP.conference?._room?.getMetadataHandler().setMetadata('recordingPoll', { approved: true });
-
-            dispatch(voteUnchangeable(pollId));
-        }
-
-        break;
-    }
     case UPDATE_CONFERENCE_METADATA: {
-        const { metadata } = action;
-
-        if (metadata?.recordingPoll?.approved) {
+        if (action.metadata?.recordingPoll?.approved) {
             dispatch(showNotification({
                 titleKey: 'recording.pollAproved'
             }, NOTIFICATION_TIMEOUT_TYPE.MEDIUM));

@@ -156,7 +156,8 @@
     },
     "closedCaptionsTab": {
         "emptyState": "The closed captions content will be available once a moderator starts it",
-        "startClosedCaptionsButton": "Start closed captions"
+        "startClosedCaptionsButton": "Start closed captions",
+        "startPollButton": "Start a poll \nto enable transcription"
     },
     "connectingOverlay": {
         "joiningRoom": "Connecting you to your meeting…"
@@ -1492,9 +1493,11 @@
         "labelTooltipExtra": "In addition, a transcript will be available later.",
         "openClosedCaptions": "Open closed captions",
         "original": "Original",
+        "pollAproved": "Transcribing request approved",
         "sourceLanguageDesc": "Currently the meeting language is set to <b>{{sourceLanguage}}</b>. <br/> You can change it from ",
         "sourceLanguageHere": "here",
         "start": "Start showing subtitles",
+        "startTranscribingPollDefaultQuestion": "I would like to transcribe this meeting",
         "stop": "Stop showing subtitles",
         "subtitles": "Subtitles",
         "subtitlesOff": "Off",

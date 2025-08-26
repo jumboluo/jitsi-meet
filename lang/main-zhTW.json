@@ -155,7 +155,8 @@
     },
     "closedCaptionsTab": {
         "emptyState": "即時字幕內容將在主持人啟用後顯示",
-        "startClosedCaptionsButton": "啟動即時字幕"
+        "startClosedCaptionsButton": "啟動即時字幕",
+        "startPollButton": "發起投票以啟用轉錄"
     },
     "connectingOverlay": {
         "joiningRoom": "正在將您連接至您的會議…"
@@ -1460,9 +1461,11 @@
         "labelTooltipExtra": "稍後將提供完整轉錄紀錄",
         "openClosedCaptions": "開啟字幕",
         "original": "原文",
+        "pollAproved": "轉錄請求已獲全員投票通過",
         "sourceLanguageDesc": "會議語言目前設定為 <b>{{sourceLanguage}}</b><br/> 您可以在這裡",
         "sourceLanguageHere": "修改",
         "start": "開始顯示字幕",
+        "startTranscribingPollDefaultQuestion": "我想要啟動字幕，您同意嗎？",
         "stop": "停用顯示字幕",
         "subtitles": "字幕",
         "subtitlesOff": "關",

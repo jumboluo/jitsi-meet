@@ -1,4 +1,4 @@
-import { CONFERENCE_PROPERTIES_CHANGED } from '../base/conference/actionTypes';
+import { CONFERENCE_PROPERTIES_CHANGED, UPDATE_CONFERENCE_METADATA } from '../base/conference/actionTypes';
 import ReducerRegistry from '../base/redux/ReducerRegistry';
 
 import {
@@ -26,6 +26,13 @@ function _getInitialState() {
         isTranscribing: false,
 
         /**
+         * Whether the poll to start transcribing has been approved.
+         */
+        poll: {
+            approved: false
+        },
+
+        /**
          * The JID of the active transcriber.
          *
          * @type { string }
@@ -36,6 +43,9 @@ function _getInitialState() {
 
 export interface ITranscribingState {
     isTranscribing: boolean;
+    poll: {
+        approved: boolean;
+    };
     transcriberJID?: string | null;
 }
 
@@ -73,6 +83,17 @@ ReducerRegistry.register<ITranscribingState>('features/transcribing',
                 isTranscribing: false,
                 transcriberJID: undefined
             };
+        case UPDATE_CONFERENCE_METADATA:
+            if (action.metadata?.transcribingPoll?.approved) {
+                return {
+                    ...state,
+                    poll: {
+                        approved: true,
+                    }
+                };
+            } else {
+                return state;
+            }
         default:
             return state;
         }

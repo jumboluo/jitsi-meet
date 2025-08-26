@@ -30,6 +30,11 @@ export interface IPoll {
     answers: Array<IAnswerData>;
 
     /**
+     * The type of approval poll, if applicable. E.g., 'recording', 'transcribing'.
+     */
+    approvalPollType?: string;
+
+    /**
      * Whether the poll vote is being edited/changed.
      */
     changingVote: boolean;

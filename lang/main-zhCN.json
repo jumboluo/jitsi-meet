@@ -155,7 +155,8 @@
     },
     "closedCaptionsTab": {
         "emptyState": "字幕将在主持人开启后显示",
-        "startClosedCaptionsButton": "开启字幕"
+        "startClosedCaptionsButton": "开启字幕",
+        "startPollButton": "发起投票以开启转录"
     },
     "connectingOverlay": {
         "joiningRoom": "连接会议中……"
@@ -1461,9 +1462,11 @@
         "labelTooltipExtra": "会后将提供转录文本",
         "openClosedCaptions": "打开字幕",
         "original": "原文",
+        "pollAproved": "转录请求已获全员投票通过",
         "sourceLanguageDesc": "当前会议语言设置为<b>{{sourceLanguage}}</b><br/>你可以在这里",
         "sourceLanguageHere": "更改",
         "start": "开启显示字幕",
+        "startTranscribingPollDefaultQuestion": "我想开启会议转录，可以吗？",
         "stop": "停止显示字幕",
         "subtitles": "字幕",
         "subtitlesOff": "关闭",

@@ -98,6 +98,7 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
             saved: true,
             editing: false,
             isSingleChoice: true,
+            approvalPollType: 'recording',
             isApprovalPoll: true,
             isVoteChangeable: true,
             skippable: false
