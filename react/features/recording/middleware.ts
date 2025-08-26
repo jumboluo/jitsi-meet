@@ -4,7 +4,7 @@ import { createRecordingEvent } from '../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../analytics/functions';
 import { IStore } from '../app/types';
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../base/app/actionTypes';
-import { CONFERENCE_JOIN_IN_PROGRESS, UPDATE_CONFERENCE_METADATA } from '../base/conference/actionTypes';
+import { CONFERENCE_JOINED, CONFERENCE_JOIN_IN_PROGRESS, UPDATE_CONFERENCE_METADATA } from '../base/conference/actionTypes';
 import { getCurrentConference } from '../base/conference/functions';
 import { openDialog } from '../base/dialog/actions';
 import JitsiMeetJS, {
@@ -38,6 +38,7 @@ import {
     clearRecordingSessions,
     hidePendingRecordingNotification,
     markConsentRequested,
+    setRecordingPollApproved,
     showPendingRecordingNotification,
     showRecordingError,
     showRecordingLimitNotification,
@@ -126,6 +127,14 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
 
                 return;
             });
+
+        break;
+    }
+
+    case CONFERENCE_JOINED: {
+        const pollAprovedFromMetadata = Boolean(action.conference.getMetadataHandler()?.getMetadata('recordingPoll')?.approved);
+
+        dispatch(setRecordingPollApproved(pollAprovedFromMetadata));
 
         break;
     }
@@ -334,14 +343,14 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
         const localParticipant = getLocalParticipant(state);
 
         if (localParticipant?.id !== id) {
-            return next(action);
+            return result;
         }
 
         if (role === PARTICIPANT_ROLE.MODERATOR) {
             dispatch(showStartRecordingNotification());
         }
 
-        return next(action);
+        return result;
     }
     }
 

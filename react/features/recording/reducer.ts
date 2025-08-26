@@ -7,6 +7,7 @@ import {
     RECORDING_SESSION_UPDATED,
     SET_MEETING_HIGHLIGHT_BUTTON_STATE,
     SET_PENDING_RECORDING_NOTIFICATION_UID,
+    SET_RECORDING_POLL_APPROVED,
     SET_SELECTED_RECORDING_SERVICE,
     SET_START_RECORDING_NOTIFICATION_SHOWN,
     SET_STREAM_KEY
@@ -16,9 +17,6 @@ const DEFAULT_STATE = {
     consentRequested: new Set(),
     disableHighlightMeetingMoment: false,
     pendingNotificationUids: {},
-    poll: {
-        approved: false
-    },
     selectedRecordingService: '',
     sessionDatas: []
 };
@@ -40,7 +38,7 @@ export interface IRecordingState {
     pendingNotificationUids: {
         [key: string]: string | undefined;
     };
-    poll: {
+    poll?: {
         approved: boolean;
     };
     selectedRecordingService: string;
@@ -93,6 +91,15 @@ ReducerRegistry.register<IRecordingState>(STORE_NAME,
             return {
                 ...state,
                 pendingNotificationUids
+            };
+        }
+
+        case SET_RECORDING_POLL_APPROVED: {
+            return {
+                ...state,
+                poll: {
+                    approved: action.approved
+                }
             };
         }
 

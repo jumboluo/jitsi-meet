@@ -46,6 +46,11 @@ export const SET_PENDING_RECORDING_NOTIFICATION_UID
     = 'SET_PENDING_RECORDING_NOTIFICATION_UID';
 
 /**
+ * The type of Redux action which sets the recording poll approved state.
+ */
+export const SET_RECORDING_POLL_APPROVED = 'SET_RECORDING_POLL_APPROVED';
+
+/**
  * The type of Redux action which sets the selected recording service.
  *
  * {

@@ -24,6 +24,7 @@ import {
     RECORDING_SESSION_UPDATED,
     SET_MEETING_HIGHLIGHT_BUTTON_STATE,
     SET_PENDING_RECORDING_NOTIFICATION_UID,
+    SET_RECORDING_POLL_APPROVED,
     SET_SELECTED_RECORDING_SERVICE,
     SET_START_RECORDING_NOTIFICATION_SHOWN,
     SET_STREAM_KEY,
@@ -489,5 +490,18 @@ export function markConsentRequested(sessionId: string) {
     return {
         type: MARK_CONSENT_REQUESTED,
         sessionId
+    };
+}
+
+/**
+ * Sets the recording poll approved state.
+ *
+ * @param {boolean} approved - Whether the recording poll was approved.
+ * @returns {Object}
+ */
+export function setRecordingPollApproved(approved: boolean) {
+    return {
+        type: SET_RECORDING_POLL_APPROVED,
+        approved
     };
 }
