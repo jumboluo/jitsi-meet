@@ -1,9 +1,10 @@
-import { UPDATE_CONFERENCE_METADATA } from '../base/conference/actionTypes';
+import { CONFERENCE_JOINED, UPDATE_CONFERENCE_METADATA } from '../base/conference/actionTypes';
 import MiddlewareRegistry from '../base/redux/MiddlewareRegistry';
 import { showErrorNotification, showNotification } from '../notifications/actions';
 import { NOTIFICATION_TIMEOUT_TYPE } from '../notifications/constants';
 
 import { TRANSCRIBER_LEFT } from './actionTypes';
+import { setRecordingPollApproved } from './actions';
 import './subscriber';
 
 /**
@@ -14,6 +15,15 @@ import './subscriber';
  */
 MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
     switch (action.type) {
+
+    case CONFERENCE_JOINED: {
+        const pollAprovedFromMetadata = Boolean(action.conference.getMetadataHandler()?.getMetadata('recordingPoll')?.approved);
+
+        dispatch(setRecordingPollApproved(pollAprovedFromMetadata));
+
+        break;
+    }
+
     case TRANSCRIBER_LEFT:
         if (action.abruptly) {
             dispatch(showErrorNotification({
@@ -21,7 +31,6 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
             }));
         }
         break;
-
     case UPDATE_CONFERENCE_METADATA:
         const approved = getState()['features/transcribing'].poll?.approved;
 

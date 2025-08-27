@@ -1,3 +1,10 @@
+
+
+/**
+ * The type of Redux action to set whether the transcribering poll has been approved
+ */
+export const SET_TRANSCRIBERING_POLL_APPROVED = 'SET_TRANSCRIBERING_POLL_APPROVED';
+
 /**
  * The type of Redux action triggering storage of participantId of transcriber,
  * so that it can later be kicked

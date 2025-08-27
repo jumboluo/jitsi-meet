@@ -2,6 +2,7 @@ import { CONFERENCE_PROPERTIES_CHANGED, UPDATE_CONFERENCE_METADATA } from '../ba
 import ReducerRegistry from '../base/redux/ReducerRegistry';
 
 import {
+    SET_TRANSCRIBERING_POLL_APPROVED,
     TRANSCRIBER_JOINED,
     TRANSCRIBER_LEFT
 } from './actionTypes';
@@ -71,6 +72,13 @@ ReducerRegistry.register<ITranscribingState>('features/transcribing',
 
             return state;
         }
+        case SET_TRANSCRIBERING_POLL_APPROVED:
+            return {
+                ...state,
+                poll: {
+                    approved: action.approved
+                }
+            };
         case TRANSCRIBER_JOINED:
             return {
                 ...state,

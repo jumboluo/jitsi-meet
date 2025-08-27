@@ -1,7 +1,15 @@
 import {
+    SET_TRANSCRIBERING_POLL_APPROVED,
     TRANSCRIBER_JOINED,
     TRANSCRIBER_LEFT
 } from './actionTypes';
+
+export function setRecordingPollApproved(approved: boolean) {
+    return {
+        type: SET_TRANSCRIBERING_POLL_APPROVED,
+        approved
+    };
+}
 
 /**
  * Notify that the transcriber, with a unique ID, has joined.
