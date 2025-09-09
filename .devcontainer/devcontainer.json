@@ -1,6 +1,9 @@
 {
   "name": "Jitsi Meet Dev Container",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "runArgs": [
+    "-p", "0.0.0.0:8080:8080"
+  ],
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "20"

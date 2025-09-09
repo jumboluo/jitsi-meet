@@ -12,7 +12,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
  * development with webpack-dev-server.
  */
 const devServerProxyTarget
-    = process.env.WEBPACK_DEV_SERVER_PROXY_TARGET || 'https://localhost:8443'; // 'https://alpha.jitsi.net';
+    = process.env.WEBPACK_DEV_SERVER_PROXY_TARGET || 'https://meet.wolfsoftstudio.cn';
 
 /**
  * Build a Performance configuration object for the given size.
